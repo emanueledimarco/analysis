@@ -85,13 +85,15 @@ class SnakesFactory:
     def getClusters(self,maxDist=600,minPoints=20,minPointsCore=5,plot=True):
 
         from sklearn.cluster import DBSCAN
+        import hdbscan
         from sklearn import metrics
         from scipy.spatial import distance
 
         # make the clustering with DBSCAN algo
         X = self.X
         distance_matrix = distance.squareform(distance.pdist(X))
-        db = DBSCAN(eps=maxDist, min_samples=minPoints,n_jobs=-1).fit(distance_matrix)
+        #db = DBSCAN(eps=maxDist, min_samples=minPoints,n_jobs=-1).fit(distance_matrix)
+        db = hdbscan.HDBSCAN(min_samples=minPoints).fit(distance_matrix)
         core_samples_mask = np.zeros_like(db.labels_, dtype=bool)
         core_samples_mask[db.core_sample_indices_] = True
         labels = db.labels_
